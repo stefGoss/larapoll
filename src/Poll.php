@@ -18,7 +18,7 @@ class Poll extends Model
 
     protected $guarded = [''];
 
-    /**
+    /** gougaaaaaaaaaaaaa
      * A poll has many options related to
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
