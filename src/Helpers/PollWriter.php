@@ -2,10 +2,12 @@
 
 namespace Inani\Larapoll\Helpers;
 
+use Illuminate\Support\Facades\Auth;
 use Inani\Larapoll\Guest;
 use Inani\Larapoll\Poll;
 use Inani\Larapoll\Traits\PollWriterResults;
 use Inani\Larapoll\Traits\PollWriterVoting;
+use Modules\Inscrit\Entities\Inscrit;
 
 class PollWriter
 {
@@ -18,8 +20,12 @@ class PollWriter
      * @param Poll $poll
      * @return string
      */
-    public function draw($poll)
+    public function draw($poll,$inscritId,$lang)
     {
+       
+    //this bellow line for test i should remove it when workin with authentification    return $this->drawRadio($poll);
+    //return $this->drawRadio($poll,$lang);
+        
         if(is_int($poll)){
             $poll = Poll::findOrFail($poll);
         }
@@ -28,24 +34,39 @@ class PollWriter
             throw new \InvalidArgumentException("The argument must be an integer or an instance of Poll");
         }
 
-        if ($poll->isComingSoon()) {
-            return 'To start soon';
-        }
+        if ($poll->isLocked()) {
+            return 'Ce sondage est fermmé';
+       }
 
-        if (!$poll->showResultsEnabled()) {
-            return 'Thanks for voting';
-        }
+      //  $voter =  auth(config('larapoll_config.admin_guard'))->user();   
+      $voter =null;
+        if ($inscritId) {
+         $voter = Inscrit::find($inscritId);
+          }
 
+        if (!is_null($voter)) {
+           
+                if ($voter->hasVoted($poll->id)) {
+                if(session()->has('success')){
+                    if ($poll->showResultsEnabled()) {
+                            return $this->drawResult($poll);
+                        } 
+                        else return 'Merci ';
+                    
+                }
+                return 'Vous avez déja voté ';
+                }  
 
-        $voter = $poll->canGuestVote() ? new Guest(request()) : auth(config('larapoll_config.admin_guard'))->user();
+               if ($poll->isRadio()) { 
+                     return $this->drawRadio($poll,$inscritId,$lang);
+               }
+            
+               return $this->drawCheckbox($poll,$inscritId,$lang);  
 
-        if (is_null($voter) || $voter->hasVoted($poll->id) || $poll->isLocked()) {
-            return $this->drawResult($poll);
-        }
+       }                                                    
+       
+   return 'not allowed for visitors'  ;
 
-        if ($poll->isRadio()) {
-            return $this->drawRadio($poll);
-        }
-        return $this->drawCheckbox($poll);
+     
     }
 }

@@ -19,6 +19,7 @@ class CreateOptionsTable extends Migration
             $table->unsignedInteger('poll_id');
             $table->integer('votes')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('poll_id')->references('id')->on('larapoll_polls');
         });

@@ -7,5 +7,6 @@ return [
     'results' => '',
     'radio' => '',
     'checkbox' => '',
-    'user_model' => App\Models\Auth\User::class,
+    'user_model' => Modules\Inscrit\Entities\Inscrit::class,
+
 ];

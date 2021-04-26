@@ -18,6 +18,7 @@ class CreateVotesTable extends Migration
             $table->string('user_id');
             $table->unsignedInteger('option_id');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('option_id')->references('id')->on('larapoll_options');
             //$table->foreign('user_id')->references('id')->on('users');

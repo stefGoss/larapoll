@@ -1,4 +1,5 @@
-<?php
+   
+   <?php
 
 namespace Inani\Larapoll\Traits;
 
@@ -34,9 +35,9 @@ trait Votable
      */
     public function countVotes()
     {
-        if($this->isPollClosed()){
+         if($this->isPollClosed()){
             return $this->votes;
-        }
+        }  
         return Vote::where('option_id', $this->getKey())->count();
     }
 

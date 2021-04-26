@@ -2,23 +2,31 @@
 
 namespace Inani\Larapoll;
 
+use App\LaunchedPoll;
 use Illuminate\Database\Eloquent\Model;
 use Inani\Larapoll\Traits\PollCreator;
 use Inani\Larapoll\Traits\PollAccessor;
 use Inani\Larapoll\Traits\PollManipulator;
 use Inani\Larapoll\Traits\PollQueries;
+use Spatie\Translatable\HasTranslations;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Poll extends Model
 {
-    use PollCreator, PollAccessor, PollManipulator, PollQueries;
+    use PollCreator, PollAccessor, PollManipulator, PollQueries , HasTranslations;
+    
+ 
+    use SoftDeletes;
 
     protected $fillable = ['question', 'canVisitorsVote', 'canVoterSeeResult'];
 
     protected $table = 'larapoll_polls';
 
     protected $guarded = [''];
+    public $translatable = ['question'];
 
-    /** gougaaaaaaaaaaaaa
+    /**
      * A poll has many options related to
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -69,5 +77,10 @@ class Poll extends Model
     public function canChangeOptions()
     {
         return $this->votes()->count() === 0;
+    }
+
+    public function isLaunched()  
+    {  $pollState = LaunchedPoll::withTrashed()->where('poll_id',$this->id)->first();
+        return $pollState   ;
     }
 }

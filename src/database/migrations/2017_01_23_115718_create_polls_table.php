@@ -21,6 +21,7 @@ class CreatePollsTable extends Migration
             $table->timestamp('isClosed')->nullable();
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('ends_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -108,8 +108,8 @@ trait PollCreator
      * @throws OptionsInvalidNumberProvidedException
      * @throws OptionsNotProvidedException
      */
-    public function generate()
-    {
+    public function generate($lang)
+    {  $a=3;
         $totalOptions = count($this->options_add);
 
         // No option add yet
@@ -125,11 +125,11 @@ trait PollCreator
             throw new CheckedOptionsException();
 
         // Create Poll && assign options to it
-        DB::transaction(function () {
+        DB::transaction(function () use ($lang) {
             $this->maxCheck = $this->maxSelection;
             $this->save();
             $this->options()
-                ->saveMany($this->instantiateOptions());
+                ->saveMany($this->instantiateOptions($lang));
         });
 
         return true;
@@ -140,14 +140,21 @@ trait PollCreator
      *
      * @return array
      */
-    private function instantiateOptions()
+    private function instantiateOptions($lang)
     {
+
         $options = [];
         foreach ($this->options_add as $option) {
-            $options[] = new Option([
+            /* $options[] = new Option([
                 'name' => $option
-            ]);
+            ]); */
+
+            $opt = new Option();
+            $opt->setTranslation('name', $lang,  $option );
+            $options[] = $opt;
         }
+
+       
 
         return $options;
     }

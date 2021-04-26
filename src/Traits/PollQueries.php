@@ -12,10 +12,14 @@ trait PollQueries
      *
      * @return array
      */
-    public function results()
+    public function results($lang)
     {
         $this->results = collect();
         foreach($this->options()->get() as $option){
+            $option->optionName=$option->getTranslation('name', $lang);
+            $option->pollName = $this->getTranslation('question', $lang);
+            $option->pollIdi = $this->id;
+
             $this->results->push([
               "option" => $option,
               "votes" => $option->countVotes(),

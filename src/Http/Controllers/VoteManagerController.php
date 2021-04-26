@@ -7,6 +7,7 @@ use Inani\Larapoll\Poll;
 use Inani\Larapoll\Guest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Modules\Inscrit\Entities\Inscrit;
 
 class VoteManagerController extends Controller
 {
@@ -20,8 +21,8 @@ class VoteManagerController extends Controller
     public function vote(Poll $poll, Request $request)
     {
 
-        try{
-
+        try {
+           
             $vote = $this->resolveVoter($request, $poll)
                 ->poll($poll)
                 ->vote($request->get('options'));
@@ -43,9 +44,14 @@ class VoteManagerController extends Controller
      */
     protected function resolveVoter(Request $request, Poll $poll)
     {
-        if($poll->canGuestVote()){
+       /*  if($poll->canGuestVote()){
             return new Guest($request);
-        }
-        return $request->user(config('larapoll_config.admin_guard'));
+        } */
+       
+        if ($request->inscritId) { 
+            return Inscrit::find($request->inscritId); 
+        } 
+    //  return $request->user(config('larapoll_config.admin_guard'));       
+        
     }
 }
