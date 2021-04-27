@@ -1,6 +1,4 @@
-
 <?php
-
 
 namespace Inani\Larapoll\Traits;
 
