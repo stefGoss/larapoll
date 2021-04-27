@@ -2,7 +2,7 @@
 
 namespace Inani\Larapoll;
 
-use App\LaunchedPoll;
+use Modules\Sondage\Entities\LaunchedPoll;
 use Illuminate\Database\Eloquent\Model;
 use Inani\Larapoll\Traits\PollCreator;
 use Inani\Larapoll\Traits\PollAccessor;
